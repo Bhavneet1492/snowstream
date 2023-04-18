@@ -211,14 +211,13 @@ def generate_summary(text):
     return response
 
 #function to render the summary of pdf file text on the page
-def render(pdf):
+def render(pdf_file):
     number_of_pages = len(pdf_file.pages)
     extractedText=""
     for page in range(0,number_of_pages): extractedText += pdf_file.pages[page].extract_text()
-    side1,side2=st.columns(2)
-    l=len(extractedText)
     st.write(generate_summary(extractedText))
 cola,colb=st.columns(2)
+
 with cola:
     if url:
         st.subheader("From URL PDF")
@@ -230,4 +229,3 @@ with cola:
 with colb:
     st.subheader("From uploaded PDF")        
     if pdf!=0:render(pdf)  
-    
