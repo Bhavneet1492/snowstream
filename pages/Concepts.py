@@ -13,11 +13,9 @@ from PIL import Image
 #----------------streamlit-------------------
 import streamlit as st
 import plotly.express as px
-
-#------------------configs------------------
-import config
-
+import os
 import json
+from dotenv import load_dotenv
 
 st.set_page_config(
     page_title="Sn❆wstream",
@@ -25,13 +23,13 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="collapsed",
 )
-
+load_dotenv()
 #----------create session object--------------
 def create_session_object():
    connection_parameters = {
-   "account": config.account,
-   "user": config.user,
-   "password":config.password,
+   "account": os.environ["account"],
+   "user": os.environ["user"],
+   "password":os.environ["password"],
    "warehouse": "compute_wh",
    "role": "accountadmin",
    "database": "openalex"

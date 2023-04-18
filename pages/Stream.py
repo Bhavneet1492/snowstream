@@ -17,15 +17,15 @@ import folium
 #----------------pillow---------------------
 import PIL
 
-#------------------configs------------------
-import config
-
 #-----------------api-----------------------
 import requests
 import json
 
 #-----------------time----------------------
 import time
+
+from dotenv import load_dotenv
+import os
 
 #--------setting thepage configurations-----
 st.set_page_config(
@@ -34,6 +34,8 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="collapsed",
 )
+
+load_dotenv()
 
 #---------------sidebar----------------------
 animation="""
@@ -45,9 +47,9 @@ st.sidebar.markdown(animation,unsafe_allow_html=True)
 #----------create session object--------------
 def create_session_object():
    connection_parameters = {
-   "account": config.account,
-   "user": config.user,
-   "password":config.password,
+   "account": os.environ["account"],
+   "user": os.environ["user"],
+   "password":os.environ["password"],
    "warehouse": "compute_wh",
    "role": "accountadmin",
    "database": "openalex"

@@ -6,7 +6,8 @@ import openai
 import pypdf
 import io
 import re
-import config
+import os
+from dotenv import load_dotenv
 
 st.set_page_config(
     page_title="Sn❆wstream",
@@ -14,6 +15,8 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="collapsed",
 )
+
+load_dotenv()
 
 #---------------sidebar----------------------
 animation="""
@@ -156,7 +159,7 @@ st.divider()
 
 # assert "openai" in get_services()
 # secrets = openai_secret_manager.get_secret("openai")
-openai.api_key = config.api_key
+openai.api_key = os.environ["api_key"]
 
 #splitting the entire text from pdf into blocks of 2048 characters each
 def split_text(text):
