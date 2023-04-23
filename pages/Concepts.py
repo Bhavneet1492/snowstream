@@ -58,7 +58,7 @@ with col1:
     search_choice=st.text_input(f"Enter any keyword contained in the concept's name",value="art",key="conceptKey")
 
 with col2:
-    numberOfSamples=st.number_input("Enter the number of samples to search from",min_value=0,value=100,key="conceptsKeySample")
+    numberOfSamples=st.slider("Enter the number of samples to search from",min_value=0,value=5000,max_value=65000,step=1000,key="conceptsKeySample")
 
 if search_choice!=0:
     concept_df=pd.DataFrame(session.sql(f"select display_name, TO_JSON(counts_by_year) from openalex.concepts limit {numberOfSamples}").collect())
@@ -66,9 +66,8 @@ if search_choice!=0:
     df_new['name']=concept_df["DISPLAY_NAME"]
     df_new = df_new[df_new["name"].str.contains(search_choice.replace(" ","|"),case=False,na=False)]
     col=st.columns(2)
-    count=0
+    col_no=0
     for index,row in df_new.iterrows():
-        count+=1
         row=row.tolist()
         l=len(row)
         name=row[-1]
@@ -80,15 +79,11 @@ if search_choice!=0:
             works_count.append(row[i]["works_count"])
             cited_by_count.append(row[i]["cited_by_count"])
         df=pd.DataFrame({"year":year,'works_count':works_count,"cited_by_count":cited_by_count},columns=["cited_by_count","works_count","year"])
-        with col[count%2]:
-            st.subheader(name)
-
-            #-----------------draw plots--------------------------------------
-            fig = px.bar(df, x=df['year'], y=df['works_count'])
-            fig.add_scatter(x=df['year'], y=df['cited_by_count'])
+        #-----------------draw plots--------------------------------------
+        with col[col_no%2]:
+            st.subheader(name)            
+            col_no+=1
+            fig = px.bar(df, x=df['year'], y=df['cited_by_count'])
+            fig.add_scatter(x=df['year'], y=df['works_count'],name="works_count")
             st.plotly_chart(fig, use_container_width=True)       
             st.divider()
-
-
-
-
