@@ -13,6 +13,8 @@ from PIL import Image
 #----------------streamlit-------------------
 import streamlit as st
 import plotly.express as px
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 import os
 import json
 from dotenv import load_dotenv
@@ -47,7 +49,7 @@ st.sidebar.markdown(animation,unsafe_allow_html=True)
 
 session=create_session_object()
 
-st.markdown("<h1 style='font-size:4rem;' >☁</h1>",unsafe_allow_html=True)
+st.markdown("<h1 style='font-size:4rem;' >☁<br><h3>///</h3></h1>",unsafe_allow_html=True)
 st.title("Welcome to concepts!")
 st.divider()
 st.subheader("Check concept populartiy")
@@ -69,21 +71,34 @@ if search_choice!=0:
     col_no=0
     for index,row in df_new.iterrows():
         row=row.tolist()
-        l=len(row)
+        # l=len(row)
         name=row[-1]
         year=[]
         works_count=[]
         cited_by_count=[]
-        for i in range(l-1):
-            year.append(row[i]["year"])
-            works_count.append(row[i]["works_count"])
-            cited_by_count.append(row[i]["cited_by_count"])
+        for i in range(len(row)-1):
+            if row[i]:
+                year.append(row[i]["year"])
+                works_count.append(row[i]["works_count"])
+                cited_by_count.append(row[i]["cited_by_count"])
         df=pd.DataFrame({"year":year,'works_count':works_count,"cited_by_count":cited_by_count},columns=["cited_by_count","works_count","year"])
+        
         #-----------------draw plots--------------------------------------
         with col[col_no%2]:
             st.subheader(name)            
             col_no+=1
-            fig = px.bar(df, x=df['year'], y=df['cited_by_count'])
-            fig.add_scatter(x=df['year'], y=df['works_count'],name="works_count")
+            fig = make_subplots(specs=[[{"secondary_y": True}]])
+            fig.add_trace(
+                go.Bar(x=df['year'], y=df['cited_by_count'], name="Cited By count"),
+                secondary_y=False,
+            )
+
+            fig.add_trace(
+                go.Scatter(x=df['year'], y=df['works_count'], name="Works count"),
+                secondary_y=True,
+            )
+            fig.update_layout(xaxis=dict(showgrid=False),
+              yaxis=dict(showgrid=False)
+            )           
             st.plotly_chart(fig, use_container_width=True)       
             st.divider()
