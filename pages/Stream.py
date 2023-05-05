@@ -147,6 +147,7 @@ with tab4:
     df=pd.DataFrame(session.sql(f"select display_name, TO_JSON(geo) from openalex.institutions limit {numberOfSamples}").collect())
     df_new=pd.json_normalize(df["TO_JSON(GEO)"].apply(json.loads))
     filter_choice=st.radio('**Filter** based on:',("City", "Country", "Country Code"))
+    st.dataframe(df_new)
     option = st.selectbox(f'Select a {filter_choice}',df_new[filter_choice])
     df_new=df_new[df_new[filter_choice] == option]
     df_new=df_new[['latitude','longitude']]
