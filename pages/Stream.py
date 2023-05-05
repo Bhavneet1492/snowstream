@@ -144,6 +144,7 @@ with tab4:
     st.markdown("`Samples`")
     numberOfSamples=st.number_input("Enter the number of samples to search from",min_value=0,value=100,key="GeoKeySample")
     loader()
+    st.write(" _It may take a few minutes to load the map_ ")
     df=pd.DataFrame(session.sql(f"select display_name, TO_JSON(geo) from openalex.institutions limit {numberOfSamples}").collect())
     df_new=pd.json_normalize(df["TO_JSON(GEO)"].apply(json.loads))
     # st.dataframe(df_new)
