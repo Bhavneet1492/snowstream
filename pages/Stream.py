@@ -146,10 +146,10 @@ with tab4:
     loader()
     df=pd.DataFrame(session.sql(f"select display_name, TO_JSON(geo) from openalex.institutions limit {numberOfSamples}").collect())
     df_new=pd.json_normalize(df["TO_JSON(GEO)"].apply(json.loads))
+    st.dataframe(df_new)
     df_new=df_new[['latitude','longitude']]
     df_new['name']=df["DISPLAY_NAME"]
     df_new.dropna(inplace=True)
     map = folium.Map(location=[0, 0], zoom_start=2)
     for i, row in df_new.iterrows():folium.Marker(location=[row['latitude'], row['longitude']], popup=row["name"]).add_to(map)
     st_folium(map,width=2000, height=500)
-   
