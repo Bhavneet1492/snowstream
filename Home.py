@@ -81,7 +81,7 @@ col1.metric("Data source:", "OpenAlex", "by Util")
 col2.metric("Inspired by the", "ancient", "-Library of Alexandria")
 col3.metric("Updated on", "monthly", "basis")
 col4.metric("Olivie Blake's", "related", "-The Atlas Six")
-st.markdown('<h3 class="custom3"><i>You can see how popular a topic is <a href="https://bhavneet1492-snowstream-home-eizpch.streamlit.app/Popularity">[Popularity]</a> and locate institutions on a world map too! <a href="https://bhavneet1492-snowstream-home-eizpch.streamlit.app/Stream">[Stream->Location]</a></i></h3>',unsafe_allow_html=True)
+st.markdown('<h3 class="custom3"><i>You can see how popular a topic is <a  target="_blank" href="https://bhavneet1492-snowstream-home-eizpch.streamlit.app/Popularity">[Popularity]</a> and locate institutions on a world map too! <a  target="_blank" href="https://bhavneet1492-snowstream-home-eizpch.streamlit.app/Stream">[Stream->Location]</a></i></h3>',unsafe_allow_html=True)
 
 #---------------sidebar----------------------
 animation="""
