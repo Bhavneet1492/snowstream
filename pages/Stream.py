@@ -148,10 +148,8 @@ with tab4:
     df_new=pd.json_normalize(df["TO_JSON(GEO)"].apply(json.loads))
     # st.dataframe(df_new)
     if st.checkbox("Apply Filter"):
-        with st.columns(2)[0]:
-            filter_choice=st.radio('**Filter** based on:',("city", "country", "country_code"),horizontal=True)
-        with st.columns(2)[1]:
-            option = st.selectbox(f'Select a {filter_choice}',df_new[filter_choice].unique())
+        filter_choice=st.radio('**Filter** based on:',("city", "country", "country_code"),horizontal=True)
+        option = st.selectbox(f'Select a {filter_choice}',df_new[filter_choice].unique())
         df_new=df_new[df_new[filter_choice] == option]
     df_new=df_new[['latitude','longitude']]
     df_new['name']=df["DISPLAY_NAME"]
