@@ -89,7 +89,11 @@ def render_data(tab_name,search_choice,numberOfSamples):
                     author_name=", ".join([results[result]["authorships"][index]["author"]["display_name"] for index in range(len(results[result]["authorships"]))])
                     published=results[result]["publication_year"]
                     type_=results[result]["type"]
-                    publisher=results[result]["primary_location"]["source"]["host_organization_name"]
+                    #publisher=results[result]["primary_location"]["source"]["host_organization_name"]
+                    try:
+                        publisher=results[result]["primary_location"]["source"]["host_organization_name"]
+                    except:
+                        publisher="unknown"
                     st.markdown('**Author(s)** `{}` **Published:** {} **Type:** {} **Publisher:** _{}_'.format(author_name,published,type_,publisher))
                     tags=""
                     for i in range(len(results[result]["concepts"])):tags+=results[result]["concepts"][i]["display_name"]+" | "
