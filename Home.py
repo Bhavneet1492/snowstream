@@ -81,7 +81,7 @@ col1.metric("Data source:", "OpenAlex", "by Util")
 col2.metric("Inspired by the", "ancient", "-Library of Alexandria")
 col3.metric("Updated on", "monthly", "basis")
 col4.metric("Olivie Blake's", "related", "-The Atlas Six")
-st.markdown('<h3 class="custom3"><i>Drop in papers in the PDF express to get a quick summary! But it doesn’t stop here. You can extract tables, graphs and code samples from the pdf too</i></h3>',unsafe_allow_html=True)
+st.markdown('<h3 class="custom3"><i>You can see how popular a topic is and locate institutions on a world map too!</i></h3>',unsafe_allow_html=True)
 
 #---------------sidebar----------------------
 animation="""
