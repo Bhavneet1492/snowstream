@@ -34,7 +34,7 @@ img {
     opacity:0.6;
 }
 [data-testid="metric-container"]{
-    border:1px solid white;
+    /* border:1px solid white; */
     border-radius:0.7rem;
     padding:1rem;
     display:flex;
