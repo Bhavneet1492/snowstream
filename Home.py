@@ -5,7 +5,7 @@ import PIL
 #-------------Set page context---------------
 st.set_page_config(
     page_title="Sn❆wstream",
-    page_icon=PIL.Image.open("./favicon.png"),
+    page_icon="chart_with_upwards_trend",
     layout="wide",
     initial_sidebar_state="collapsed",
 )
