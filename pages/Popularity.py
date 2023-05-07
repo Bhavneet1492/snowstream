@@ -52,7 +52,7 @@ st.sidebar.markdown(animation,unsafe_allow_html=True)
 
 session=create_session_object()
 
-st.markdown("<h1 style='font-size:4rem;line-height:14px;margin:0;padding:0;'>☁<br><h2 style='line-height:14px;margin:0;padding:0;'>&nbsp;///</h2></h1>",unsafe_allow_html=True)
+st.markdown("<h1 style='font-size:4rem;line-height:14px;margin:0;padding:0;'>☁<br><h2>&nbsp;///</h2></h1>",unsafe_allow_html=True)
 st.title("Popularity")
 
 def render(schema):
