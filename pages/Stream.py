@@ -74,7 +74,7 @@ def render_data(tab_name,search_choice,numberOfSamples):
         tab_df = df[df["DISPLAY_NAME"].str.contains(search_choice.replace(" ","|"),case=False,na=False)]
         if tab_df.empty:
             st.error(f"⚠️{tab_name[:-1]} not found")
-            st.warning(f"This {tab_name[:-1]} does not exist in the selected samples. Please check if you have entered the correct spelling or try entering a more name")
+            st.warning(f"This {tab_name[:-1]} does not exist in the selected samples. Please check if you have entered the correct spelling or try entering a more specific name")
             st.info("OR search for more samples")
         else:
             for tab in range(len(tab_df)):
