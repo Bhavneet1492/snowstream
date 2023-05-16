@@ -82,6 +82,7 @@ def render_data(tab_name,search_choice,numberOfSamples):
                 data = response_API.text
                 parse_json = json.loads(data)
                 results=parse_json["results"]
+                st.write(results)
                 l=len(results)
                 for result in range(l):
                     serial_number+=1
