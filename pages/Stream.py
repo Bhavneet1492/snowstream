@@ -140,7 +140,8 @@ with tab2:
      render_ui("Concept",st.columns(3),"art")
 
 with tab3:
-     render_ui("Institution",st.columns(3),"tech")
+     #render_ui("Institution",st.columns(3),"tech")
+      st.header("`Coming Soon`")
 
 with tab4:
     #creating map for locations of various institutions
