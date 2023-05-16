@@ -147,16 +147,16 @@ with tab4:
     #creating map for locations of various institutions
     st.code("This map shows the location of various institutions across the globe")
     st.markdown("`Samples`")
-    numberOfSamples=st.slider("Enter the number of samples to search from",min_value=0,value=100000,max_value=300000000,step=1000,key="GeoKeySample")
+    numberOfSamples=st.number_input("Enter the number of samples to search from",min_value=0,value=100,key="GeoKeySample")
     loader()
+    st.write(" _It may take a few minutes to load the map_ ")
     df=pd.DataFrame(session.sql(f"select display_name, TO_JSON(geo) from openalex.institutions limit {numberOfSamples}").collect())
     df_new=pd.json_normalize(df["TO_JSON(GEO)"].apply(json.loads))
     # st.dataframe(df_new)
-    with st.columns(2)[0]:
-        filter_choice=st.radio('**Filter** based on:',("city", "country", "country_code"),disabled=True)
-    with st.columns(2)[1]:
-        option = st.selectbox(f'Select a {filter_choice}',df_new[filter_choice])
-    df_new=df_new[df_new[filter_choice] == option]
+    if st.checkbox("Apply Filter"):
+        filter_choice=st.radio('**Filter** based on:',("city", "country", "country_code"),horizontal=True)
+        option = st.selectbox(f'Select a {filter_choice}',df_new[filter_choice].unique())
+        df_new=df_new[df_new[filter_choice] == option]
     df_new=df_new[['latitude','longitude']]
     df_new['name']=df["DISPLAY_NAME"]
     df_new.dropna(inplace=True)
