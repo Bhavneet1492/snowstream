@@ -119,7 +119,7 @@ st.title("Stream Research Works")
 
 tab1, tab2, tab3, tab4  = st.tabs(["Author","Topic","Institution","Location"])
 
-def render_ui(tab_name,cols,default):
+def render_ui(tab_name,cols,default,defaultSamples):
 
     with cols[0]:
         st.subheader(f"{tab_name}'s name")
@@ -127,20 +127,20 @@ def render_ui(tab_name,cols,default):
             
     with cols[2]:
         st.subheader("Samples")
-        numberOfSamples=st.number_input("Enter the number of samples to search from",min_value=0,value=10000,key=f"{tab_name}KeySample")
+        numberOfSamples=st.number_input("Enter the number of samples to search from",min_value=0,value=defaultSamples,key=f"{tab_name}KeySample")
 
     loader()
     render_data(f"{tab_name}s",search_choice,numberOfSamples)
 
 #-------------------tabs------------------------------------
 with tab1:
-    render_ui("Author",st.columns(3),"julie")
+    render_ui("Author",st.columns(3),"julie",10000)
 
 with tab2:
-     render_ui("Concept",st.columns(3),"art")
+     render_ui("Concept",st.columns(3),"art",10000)
 
 with tab3:
-     render_ui("Institution",st.columns(3),"tech")
+     render_ui("Institution",st.columns(3),"tech",100)
 
 with tab4:
     #creating map for locations of various institutions
