@@ -82,7 +82,7 @@ def render_data(tab_name,search_choice,numberOfSamples):
                 data = response_API.text
                 parse_json = json.loads(data)
                 results=parse_json["results"]
-                st.write(results)
+                #st.write(results)
                 l=len(results)
                 for result in range(l):
                     serial_number+=1
@@ -103,8 +103,11 @@ def render_data(tab_name,search_choice,numberOfSamples):
                         institutes_len=len(results[result]["authorships"][i]["institutions"])
                         if institutes_len!=0:
                             for j in range(institutes_len):
-                                institute_name=results[result]["authorships"][i]["institutions"][j]["display_name"]
-                                if institute_name not in institutes:institutes+=results[result]["authorships"][i]["institutions"][j]["display_name"]+" | "
+                                try:
+                                    institute_name=results[result]["authorships"][i]["institutions"][j]["display_name"]
+                                except:
+                                    institute_name=""
+                                if (institute_name not in institutes) and institute_name!="":institutes+=results[result]["authorships"][i]["institutions"][j]["display_name"]+" | "
                     if institutes_len!=0:st.markdown("**Associated Institutes:** {}".format(institutes[:-3]))
                     st.markdown("**Tags:** {}".format(tags[:-3]))
                     st.divider()
