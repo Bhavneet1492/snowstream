@@ -74,7 +74,7 @@ def render_data(tab_name,search_choice,numberOfSamples):
         tab_df = df[df["DISPLAY_NAME"].str.contains(search_choice.replace(" ","|"),case=False,na=False)]
         if tab_df.empty:
             st.error(f"⚠️{tab_name[:-1]} not found")
-            st.warning(f"This {tab_name[:-1]} does not exist in the selected samples. Please check if you have entered the correct spelling or try entering a more specific name")
+            st.warning(f"This {tab_name[:-1]} does not exist in the selected samples. Please check if you have entered the correct spelling or try entering a more name")
             st.info("OR search for more samples")
         else:
             for tab in range(len(tab_df)):
@@ -82,19 +82,20 @@ def render_data(tab_name,search_choice,numberOfSamples):
                 data = response_API.text
                 parse_json = json.loads(data)
                 results=parse_json["results"]
-                #st.write(results)
                 l=len(results)
+                # st.write(results)
                 for result in range(l):
                     serial_number+=1
                     st.subheader('{}. [{}]({})'.format(serial_number,results[result]["title"],results[result]["doi"]))
                     author_name=", ".join([results[result]["authorships"][index]["author"]["display_name"] for index in range(len(results[result]["authorships"]))])
                     published=results[result]["publication_year"]
                     type_=results[result]["type"]
-                    #publisher=results[result]["primary_location"]["source"]["host_organization_name"]
+                    # publisher=results[result]["primary_location"]["source"]["host_organization_name"] if "source" in results[result]["primary_location"] else "unknown"
                     try:
                         publisher=results[result]["primary_location"]["source"]["host_organization_name"]
                     except:
                         publisher="unknown"
+                        # st.write(results[result])
                     st.markdown('**Author(s)** `{}` **Published:** {} **Type:** {} **Publisher:** _{}_'.format(author_name,published,type_,publisher))
                     tags=""
                     for i in range(len(results[result]["concepts"])):tags+=results[result]["concepts"][i]["display_name"]+" | "
@@ -103,11 +104,8 @@ def render_data(tab_name,search_choice,numberOfSamples):
                         institutes_len=len(results[result]["authorships"][i]["institutions"])
                         if institutes_len!=0:
                             for j in range(institutes_len):
-                                try:
-                                    institute_name=results[result]["authorships"][i]["institutions"][j]["display_name"]
-                                except:
-                                    institute_name=""
-                                if (institute_name not in institutes) and institute_name!="":institutes+=results[result]["authorships"][i]["institutions"][j]["display_name"]+" | "
+                                institute_name=results[result]["authorships"][i]["institutions"][j]["display_name"]
+                                if institute_name not in institutes:institutes+=results[result]["authorships"][i]["institutions"][j]["display_name"]+" | "
                     if institutes_len!=0:st.markdown("**Associated Institutes:** {}".format(institutes[:-3]))
                     st.markdown("**Tags:** {}".format(tags[:-3]))
                     st.divider()
@@ -119,7 +117,7 @@ st.title("Stream Research Works")
 
 tab1, tab2, tab3, tab4  = st.tabs(["Author","Topic","Institution","Location"])
 
-def render_ui(tab_name,cols,default,defaultSamples):
+def render_ui(tab_name,cols,default):
 
     with cols[0]:
         st.subheader(f"{tab_name}'s name")
@@ -127,35 +125,36 @@ def render_ui(tab_name,cols,default,defaultSamples):
             
     with cols[2]:
         st.subheader("Samples")
-        numberOfSamples=st.number_input("Enter the number of samples to search from",min_value=0,value=defaultSamples,key=f"{tab_name}KeySample")
+        if tab_name=="Author":numberOfSamples=st.slider("Enter the number of samples to search from",min_value=0,value=10000,max_value=5000000,step=1000,key=f"{tab_name}KeySample")
+        else:numberOfSamples=st.slider("Enter the number of samples to search from",min_value=0,value=100,max_value=50000,step=10,key=f"{tab_name}KeySample")
 
     loader()
     render_data(f"{tab_name}s",search_choice,numberOfSamples)
 
 #-------------------tabs------------------------------------
 with tab1:
-    render_ui("Author",st.columns(3),"julie",10000)
+    render_ui("Author",st.columns(3),"mar")
 
 with tab2:
-     render_ui("Concept",st.columns(3),"art",10000)
+     render_ui("Concept",st.columns(3),"art")
 
 with tab3:
-     render_ui("Institution",st.columns(3),"tech",100)
+     render_ui("Institution",st.columns(3),"tech")
 
 with tab4:
     #creating map for locations of various institutions
     st.code("This map shows the location of various institutions across the globe")
     st.markdown("`Samples`")
-    numberOfSamples=st.number_input("Enter the number of samples to search from",min_value=0,value=100,key="GeoKeySample")
+    numberOfSamples=st.slider("Enter the number of samples to search from",min_value=0,value=100000,max_value=300000000,step=1000,key="GeoKeySample")
     loader()
-    st.write(" _It may take a few minutes to load the map_ ")
     df=pd.DataFrame(session.sql(f"select display_name, TO_JSON(geo) from openalex.institutions limit {numberOfSamples}").collect())
     df_new=pd.json_normalize(df["TO_JSON(GEO)"].apply(json.loads))
     # st.dataframe(df_new)
-    if st.checkbox("Apply Filter"):
-        filter_choice=st.radio('**Filter** based on:',("city", "country", "country_code"),horizontal=True)
-        option = st.selectbox(f'Select a {filter_choice}',df_new[filter_choice].unique())
-        df_new=df_new[df_new[filter_choice] == option]
+    with st.columns(2)[0]:
+        filter_choice=st.radio('**Filter** based on:',("city", "country", "country_code"),disabled=True)
+    with st.columns(2)[1]:
+        option = st.selectbox(f'Select a {filter_choice}',df_new[filter_choice])
+    df_new=df_new[df_new[filter_choice] == option]
     df_new=df_new[['latitude','longitude']]
     df_new['name']=df["DISPLAY_NAME"]
     df_new.dropna(inplace=True)
